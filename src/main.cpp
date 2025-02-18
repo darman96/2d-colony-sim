@@ -1,11 +1,26 @@
 #include <iostream>
 #include <chrono>
+#include <thread>
+#include <atomic>
+
+std::atomic<bool> isRunning(true);
+
+void handleInput() {
+    while (isRunning) {
+        char input;
+        std::cin >> input;
+        if (input == 'q') {
+            isRunning = false;
+        }
+    }
+}
 
 int main() {
-    bool isRunning = true;
     auto lastTime = std::chrono::high_resolution_clock::now();
     int frameCount = 0;
     auto startTime = lastTime;
+
+    std::thread inputThread(handleInput);
 
     while (isRunning) {
         // Calculate delta time
@@ -25,13 +40,11 @@ int main() {
             startTime = currentTime;
         }
 
-        // Placeholder for handling user input
-        char input;
-        std::cin >> input;
-        if (input == 'q') {
-            isRunning = false;
-        }
+        // Sleep to limit frame rate
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
+
+    inputThread.join();
 
     return 0;
 }
