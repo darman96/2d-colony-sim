@@ -6,13 +6,29 @@ if [ -d "$VULKAN_SDK" ]; then
     exit 0
 fi
 
-# Download and install Vulkan SDK
-echo "Downloading Vulkan SDK..."
-wget -qO- https://sdk.lunarg.com/sdk/download/latest/linux/vulkan-sdk.tar.gz | tar xz -C /opt --strip-components=1
+# Clone the Vulkan SDK repository
+echo "Cloning Vulkan SDK repository..."
+git clone --recursive https://github.com/KhronosGroup/Vulkan-Loader.git /opt/vulkan-sdk
+if [ $? -ne 0 ]; then
+    echo "Failed to clone Vulkan SDK repository"
+    exit 1
+fi
+
+# Build the Vulkan SDK
+echo "Building Vulkan SDK..."
+cd /opt/vulkan-sdk
+mkdir build
+cd build
+cmake ..
+make
+if [ $? -ne 0 ]; then
+    echo "Failed to build Vulkan SDK"
+    exit 1
+fi
 
 # Set up environment variables
 echo "Setting up environment variables..."
-export VULKAN_SDK=/opt/vulkan-sdk/x.x.x.x/x86_64
+export VULKAN_SDK=/opt/vulkan-sdk/build
 export PATH=$VULKAN_SDK/bin:$PATH
 export LD_LIBRARY_PATH=$VULKAN_SDK/lib:$LD_LIBRARY_PATH
 export VK_ICD_FILENAMES=$VULKAN_SDK/etc/vulkan/icd.d/nvidia_icd.json
