@@ -12,36 +12,24 @@ if [ "$EUID" -ne 0 ]; then
     sudo -v
 fi
 
-# Create a temporary directory for building the Vulkan SDK
+# Create a temporary directory for downloading the Vulkan SDK
 TEMP_DIR=$(mktemp -d)
 if [ ! -d "$TEMP_DIR" ]; then
     echo "Failed to create temporary directory"
     exit 1
 fi
 
-# Clone the Vulkan SDK repository
-echo "Cloning Vulkan SDK repository..."
-git clone --recursive https://github.com/KhronosGroup/Vulkan-Loader.git "$TEMP_DIR/vulkan-sdk"
+# Download the Vulkan SDK binaries
+echo "Downloading Vulkan SDK..."
+wget -qO- https://sdk.lunarg.com/sdk/download/1.4.304.1/linux/vulkansdk-linux-x86_64-1.4.304.1.tar.xz | tar xJ -C "$TEMP_DIR"
 if [ $? -ne 0 ]; then
-    echo "Failed to clone Vulkan SDK repository"
+    echo "Failed to download or extract Vulkan SDK"
     exit 1
 fi
 
-# Build the Vulkan SDK
-echo "Building Vulkan SDK..."
-cd "$TEMP_DIR/vulkan-sdk"
-mkdir build
-cd build
-cmake ..
-make
-if [ $? -ne 0 ]; then
-    echo "Failed to build Vulkan SDK"
-    exit 1
-fi
-
-# Copy the built SDK to /opt
+# Copy the extracted SDK to /opt
 echo "Copying Vulkan SDK to /opt..."
-sudo cp -r "$TEMP_DIR/vulkan-sdk/build" /opt/vulkan-sdk
+sudo cp -r "$TEMP_DIR/vulkansdk-linux-x86_64-1.4.304.1" /opt/vulkan-sdk
 if [ $? -ne 0 ]; then
     echo "Failed to copy Vulkan SDK to /opt"
     exit 1
