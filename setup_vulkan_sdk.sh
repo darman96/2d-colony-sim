@@ -6,9 +6,15 @@ if [ -d "$VULKAN_SDK" ]; then
     exit 0
 fi
 
+# Prompt the user for sudo password when necessary
+if [ "$EUID" -ne 0 ]; then
+    echo "This script requires sudo privileges. Please enter your password."
+    sudo -v
+fi
+
 # Clone the Vulkan SDK repository
 echo "Cloning Vulkan SDK repository..."
-git clone --recursive https://github.com/KhronosGroup/Vulkan-Loader.git /opt/vulkan-sdk
+sudo git clone --recursive https://github.com/KhronosGroup/Vulkan-Loader.git /opt/vulkan-sdk
 if [ $? -ne 0 ]; then
     echo "Failed to clone Vulkan SDK repository"
     exit 1
