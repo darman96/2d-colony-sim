@@ -43,6 +43,13 @@ To install the required dependencies for Vulkan, GLFW, and GLM, follow these ste
    - Download GLM from the official GLM GitHub repository: [https://github.com/g-truc/glm](https://github.com/g-truc/glm)
    - Follow the installation instructions for your operating system.
 
+## Setting up the Vulkan SDK
+
+To set up the Vulkan SDK, run the following command:
+```
+./setup_vulkan_sdk.sh
+```
+
 ## Running the Project
 
 To run the project, follow these steps:
