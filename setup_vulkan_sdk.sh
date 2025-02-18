@@ -8,7 +8,7 @@ fi
 
 # Download and install Vulkan SDK
 echo "Downloading Vulkan SDK..."
-wget -qO- https://sdk.lunarg.com/sdk/download/latest/linux/vulkan-sdk.tar.gz | tar xz -C /opt
+wget -qO- https://sdk.lunarg.com/sdk/download/latest/linux/vulkan-sdk.tar.gz | tar xz -C /opt --strip-components=1
 
 # Set up environment variables
 echo "Setting up environment variables..."
